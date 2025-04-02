@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Monster : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
     public string monName;
 

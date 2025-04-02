@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using DG.Tweening;
+﻿using UnityEngine;
 using TMPro;
+using DG.Tweening;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -38,29 +38,37 @@ public class GameManager : MonoBehaviour
 
     public void Damage(GameObject user, GameObject target, float damage)    // 대미지를 주는 함수
     {
-        Debug.Log($"{user.name}가 {target.name}에게 {damage}의 대미지");
         NormalState targetState = target.GetComponent<NormalState>();
 
         float cul;
 
-        if (targetState.isInvincible || targetState.isLive == false)   // 무적상태거나 죽어있으면 대미지 없음
+        if (targetState.isLive == false)// 대상이 죽어있으면 대미지 없음
             return;
 
-        if ((cul = targetState.curHp - damage) > 0) // 대미지 받은 후의 체력이 0 이상이라면
-            targetState.curHp = cul;    // 방어력이 없으니 별도의 계산공식 없이 즉시 대미지 반영
-        else    // 대미지 받은 후의 체력이 0 이하라면
+        if (targetState.isInvincible)   // 대상이 무적 상태라면 면역 출력
         {
-            targetState.curHp = 0;  // 체력을 0으로 변경
-            targetState.isLive = false; // 대상 사망
-            Debug.Log($"{target.name}은 사망했다");
+            ShowFloatingText(target, "면역!");// 대상 위치에 "면역" 텍스트 출력
+            damage = 0;
         }
-
-        HitEffect(target);                          // 대상에게 반짝이는 효과 생성
-        ShowFloatingText(target, damage.ToString());// 대상 위치에 대미지 텍스트 출력
-
-        if (target == playerCharacter)              // 대상이 플레이어 캐릭터라면 체력바 반영
+        else    // 무적 상태가 아니라면 대미지 계산
         {
-            healthbar.SetHealth(playerState.curHp, playerState.maxHp);
+            if ((cul = targetState.curHp - damage) > 0) // 대미지 받은 후의 체력이 0 이상이라면
+                targetState.curHp = cul;    // 방어력이 없으니 별도의 계산공식 없이 즉시 대미지 반영
+            else    // 대미지 받은 후의 체력이 0 이하라면
+            {
+                targetState.curHp = 0;  // 체력을 0으로 변경
+                targetState.isLive = false; // 대상 사망
+                Debug.Log($"{target.name}은 사망했다");
+            }
+
+            HitEffect(target);                          // 대상에게 반짝이는 효과 생성
+            ShowFloatingText(target, damage.ToString());// 대상 위치에 대미지 텍스트 출력
+
+            if (target == playerCharacter)              // 대상이 플레이어 캐릭터라면 체력바 반영
+            {
+                healthbar.SetHealth(playerState.curHp, playerState.maxHp);
+            }
+            Debug.Log($"{user.name}가 {target.name}에게 {damage}의 대미지");
         }
     }
 
@@ -75,7 +83,7 @@ public class GameManager : MonoBehaviour
         DOTween.Kill(target);
 
         Sequence seq = DOTween.Sequence().SetId(target);
-        Color flashColor = new Color(100f, 100f, 100f, 0f);
+        Color flashColor = new Color(100f, 100f, 100f, 1f);
         seq.Append(sr.DOColor(flashColor, 0.05f));
         seq.Append(sr.DOColor(originalColor, 0.05f));
     }

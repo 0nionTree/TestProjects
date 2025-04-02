@@ -4,8 +4,8 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - Monster
   - Weapon
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -42,6 +42,9 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: monster
+    uniqueID: 1837527213
     locked: 0
   - name: character
     uniqueID: 2350742211

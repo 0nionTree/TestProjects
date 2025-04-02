@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +8,8 @@ public class Character : MonoBehaviour
     public int maxSp = 10;
     public int curSp = 0;
 
-    public float attackCooldown = 1;
+    public float attackPower = 100f;
+    public float attackSpeed = 1f;
 
     public int level = 1;
     public int maxExp = 100;
@@ -17,23 +17,34 @@ public class Character : MonoBehaviour
 
     public int gold = 0;
 
-    public GameObject weapon;
-    private float weaponAngle = 0f;
+    public GameObject sword;        // 검 오브젝트
+    public GameObject shield;       // 방패 오브젝트
+    public List<SkillBase> skills = new List<SkillBase>();
 
-    private GameObject nearestMonster;
+    public GameObject nearestMonster;
+    public float Angle = 0f;
 
     void Update()
     {
         GetNearestMonster();
-        weapon.transform.rotation = Quaternion.Euler(0f, 0f, weaponAngle-90f);
+        if(skills[0].currSkillCooldown <= 0)    // 주 스킬이 준비되면 작동
+        {
+            skills[0].Activate(this.gameObject, nearestMonster);
+        }
+        // 스킬 쿨타임 감소 루프
+        for (int i = 0; i < skills.Count; i++)
+        {
+            skills[i].currSkillCooldown = Mathf.Max(0f, skills[i].currSkillCooldown - (Time.deltaTime * attackSpeed));
+        }
     }
 
+    // ------------- 몬스터 서치 --------------
     // 플레이어 기준으로 가장 가까이 있는 몬스터(GameObject)를 반환하는 함수
     private void GetNearestMonster()
     {
         GameObject nearest = null;                      // 현재까지 찾은 가장 가까운 몬스터
         float nearestDistance = Mathf.Infinity;         // 가장 가까운 거리 (초기값은 무한대로 설정)
-        weaponAngle = 0f;  // 기본값 설정
+        Angle = 0f;  // 기본값 설정
 
         // GameManager에 등록된 모든 몬스터를 순회
         foreach (GameObject monster in GameManager.instance.monsters)
@@ -60,7 +71,7 @@ public class Character : MonoBehaviour
             Vector2 targetPos = nearest.transform.position;
             Vector2 direction = (targetPos - (Vector2)transform.position).normalized;
 
-            weaponAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            Angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
             // 디버그용 선 표시 (씬 뷰에서 확인 가능)
             // 플레이어 → 가장 가까운 몬스터 방향으로 빨간 선을 그림
@@ -68,5 +79,6 @@ public class Character : MonoBehaviour
         }
         nearestMonster = nearest;
     }
+    // ---------------- 스킬 ----------------
 
 }

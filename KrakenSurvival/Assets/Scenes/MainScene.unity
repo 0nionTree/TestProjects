@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 2151441}
   m_Layer: 0
   m_Name: Monster
-  m_TagString: Monster
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -233,7 +233,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1944225085
+  m_SortingLayerID: 1837527213
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: cf187d645cb31c948b087bf8d17f9e70, type: 3}
@@ -331,6 +331,7 @@ GameObject:
   m_Component:
   - component: {fileID: 111456421}
   - component: {fileID: 111456423}
+  - component: {fileID: 111456424}
   - component: {fileID: 111456422}
   m_Layer: 0
   m_Name: Sword
@@ -433,7 +434,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -147172125
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 4437f27ed774be447b26c3a2c5b0aebe, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -446,6 +447,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &111456424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 111456420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b5bea71c6e02874084035d3a95ead88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  user: {fileID: 282664100}
+  isAttacking: 0
+  spUp: 0
+  damage: 0
 --- !u!1 &268282771
 GameObject:
   m_ObjectHideFlags: 0
@@ -602,7 +619,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1944225085
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: b24c0f4d5fb9e0c489f30ce0a5c49d9b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -666,12 +683,18 @@ MonoBehaviour:
   charName: "\uC804\uC0AC"
   maxSp: 100
   curSp: 0
-  attackCooldown: 1
+  attackPower: 100
+  attackSpeed: 1
   level: 1
   maxExp: 100
   curExp: 0
   gold: 0
-  weapon: {fileID: 111456420}
+  sword: {fileID: 111456420}
+  shield: {fileID: 1057829215}
+  skills:
+  - {fileID: 11400000, guid: 961128c4046389647a8e62390dc87638, type: 2}
+  nearestMonster: {fileID: 0}
+  Angle: 0
 --- !u!114 &282664105
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1007,6 +1030,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 268282772}
+  - {fileID: 1186375159}
   - {fileID: 362301464}
   - {fileID: 1038546509}
   m_Father: {fileID: 1251507613}
@@ -1029,6 +1053,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fillImage: {fileID: 362301465}
+  backImage: {fileID: 1186375160}
   fillText: {fileID: 1038546510}
 --- !u!1 &619394800
 GameObject:
@@ -1067,7 +1092,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: 00000000c37a1d8ce3543af7
+  m_ApplyToSortingLayers: 00000000c37a1d8ce3543af7ad70866d
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -1324,7 +1349,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -147172125
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 5dab724f0774c9d4fa0153e281e2fc3a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1387,6 +1412,81 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1186375158
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1186375159}
+  - component: {fileID: 1186375161}
+  - component: {fileID: 1186375160}
+  m_Layer: 5
+  m_Name: back
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1186375159
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1186375158}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 579567326}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 299, y: 29}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1186375160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1186375158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 62ded0ee39aa5874d97f8eec5d79ad72, type: 3}
+  m_Type: 3
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 0
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1186375161
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1186375158}
+  m_CullTransparentMesh: 1
 --- !u!1 &1251507609
 GameObject:
   m_ObjectHideFlags: 0

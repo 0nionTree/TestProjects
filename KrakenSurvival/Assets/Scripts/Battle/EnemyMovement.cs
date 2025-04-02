@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MonsterMovement : MonoBehaviour
+public class EnemyMovement : MonoBehaviour
 {
     public Transform target;         // 따라갈 대상 ( Player)
 
